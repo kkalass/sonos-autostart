@@ -13,13 +13,39 @@ app.get('/', function (req, res) {
 });
 
 app.post('/eventcb', upload.array(), function (req, res) {
-  console.log('got body', JSON.stringify(req.body));
-  console.log('url', req.url, req.originalUrl);  
-  console.log('params', req.params);
-  console.log('path', req.path);
-  console.log('query', req.query);
+  //console.log('got body', JSON.stringify(req.body));
+  
+  var body = req.body;
+  if (body.type === 'topology-change') {
+     console.log('topology changed');
+     var players = extractPlayerInfo(body.data);
+     var kitchen = players['Küche'];
+     var eatingroom = players['Esszimmer'];
+     if (kitchen && !eatingroom) {
+         ensureOnePlaying(kitchen);
+     } else if (!kitchen && eatingroom) {
+         ensureOnePlaying(eatingroom);
+     } else if (kitchen && eatingroom) {
+         ensureBothPlaying(kitchen, eatingroom);
+     }
+  }
+
+
   res.send('OK');
 });
+
+var ensureOnePlaying = function(player) {
+    console.log('FIXME - IMPLEMENT - ensureOnePlaying', player);
+}
+
+var ensureBothPlaying = function (a, b) {
+    console.log('FIXME - IMPLEMENT - ensureBothPlaying', a, b);
+}
+
+var extractPlayerInfo = function (data) {
+    console.log('FIXME - IMPLEMENT - extractPlayerInfo', JSON.stringify(data));
+    return {};
+}
 
 var server = app.listen(3000, function () {
   var host = server.address().address;
