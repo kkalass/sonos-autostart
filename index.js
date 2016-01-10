@@ -13,7 +13,7 @@ app.get('/', function (req, res) {
 });
 
 app.post('/eventcb', upload.array(), function (req, res) {
-  console.log('got body', req.body);
+  console.log('got body', JSON.stringify(req.body));
   console.log('url', req.url, req.originalUrl);  
   console.log('params', req.params);
   console.log('path', req.path);
