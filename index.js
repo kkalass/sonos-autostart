@@ -51,10 +51,11 @@ app.post('/eventcb', upload.array(), function(req, res) {
     // console.log('got body', JSON.stringify(req.body));
 
     var body = req.body;
-    console.log('got event ', body.type);
+    // console.log('got event ', body.type);
     if (body.type === 'topology-change') {
         console.log('topology changed');
-        var players = topologyChangeParser.parseTopologyPlayerInfo(body.data.data);
+        var players = topologyChangeParser.parseTopologyPlayerInfo(body.data);
+        console.log('topology change found players', players);
         autoplayservice.autoplay(players);
     }
 
