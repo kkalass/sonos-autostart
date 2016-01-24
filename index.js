@@ -37,9 +37,10 @@ app.get('/', function(req, res) {
     request(url, function(error, response, body) {
         if (!error && response.statusCode == 200) {
 
-            console.log("Autoplay SUCCESS!", body) // Show the HTML for the Google homepage.
+            console.log("Manual Autoplay trigger!") // Show the HTML for the Google homepage.
 
             var players = topologyChangeParser.parseTopologyPlayerInfo(body);
+            console.log("Found players", players);
             autoplayservice.autoplay(players);
             res.send('Triggered!');
         }
