@@ -2,6 +2,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var multer = require('multer'); // v1.0.5
 var upload = multer(); // for parsing multipart/form-data
+var request = require('request');
 
 var app = express();
 app.use(bodyParser.json()); // for parsing application/json
@@ -32,7 +33,17 @@ var topologyChangeParser = require('./src/topologyChangeParser.js');
 var autoplayservice = require('./src/autoplayservice.js').service(config);
 
 app.get('/', function(req, res) {
-    res.send('Hello World!');
+    var url = "http://localhost:5005/zones";
+    request(url, function(error, response, body) {
+        if (!error && response.statusCode == 200) {
+
+            console.log("Autoplay SUCCESS!", body) // Show the HTML for the Google homepage.
+
+            var players = topologyChangeParser.parsePlayerInfo(body.data);
+            autoplayservice.autoplay(players);
+            res.send('Triggered!');
+        }
+    })
 });
 
 app.post('/eventcb', upload.array(), function(req, res) {
@@ -41,7 +52,7 @@ app.post('/eventcb', upload.array(), function(req, res) {
     var body = req.body;
     if (body.type === 'topology-change') {
         console.log('topology changed');
-        var players = topologyChangeParser.parsePlayerInfo(body.data);
+        var players = topologyChangeParser.parsePlayerInfo(body.data.data);
         autoplayservice.autoplay(players);
     }
 

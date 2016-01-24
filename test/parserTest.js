@@ -6,7 +6,7 @@ var fs = require('fs');
 
 describe('parse topology change', function() {
     var testInput1 = JSON.parse(fs.readFileSync('test/topology-change.json', 'utf8'));
-    var playerInfo = topologyChangeParser.parsePlayerInfo(testInput1);
+    var playerInfo = topologyChangeParser.parseTopologyPlayerInfo(testInput1.data);
 
     it('should have three Players ', function() {
         expect(playerInfo.length).to.equal(3);
