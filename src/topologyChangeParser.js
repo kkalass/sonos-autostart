@@ -1,7 +1,6 @@
 var _ = require('underscore');
 
-var parseTopologyPlayerInfo = function(data) {
-    var zoneArray = data.data;
+var parseTopologyPlayerInfo = function(zoneArray) {
     // TODO: take members into consideration, not only coordinators
     var zones = _(zoneArray).map(function(zoneData) {
         var coordinator = zoneData.coordinator || {};
