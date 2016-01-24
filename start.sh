@@ -6,4 +6,4 @@ LOGFILE=sonos-autostart.log
 
 echo -e "\n*******\n Starting Sonos Autostart service `date`\n********\n" >> $LOGFILE
 
-npm start >> $LOGFILE
+npm start 2>&1 >> $LOGFILE
