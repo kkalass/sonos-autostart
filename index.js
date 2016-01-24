@@ -39,7 +39,7 @@ app.get('/', function(req, res) {
 
             console.log("Autoplay SUCCESS!", body) // Show the HTML for the Google homepage.
 
-            var players = topologyChangeParser.parsePlayerInfo(body.data);
+            var players = topologyChangeParser.parseTopologyPlayerInfo(body);
             autoplayservice.autoplay(players);
             res.send('Triggered!');
         }
@@ -53,7 +53,7 @@ app.post('/eventcb', upload.array(), function(req, res) {
     console.log('got event ', body.type);
     if (body.type === 'topology-change') {
         console.log('topology changed');
-        var players = topologyChangeParser.parsePlayerInfo(body.data.data);
+        var players = topologyChangeParser.parseTopologyPlayerInfo(body.data.data);
         autoplayservice.autoplay(players);
     }
 
