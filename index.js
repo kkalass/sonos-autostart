@@ -16,7 +16,7 @@ var config = [
         ],
         play : {
             type : "favourite",
-            value : "NDR 2"
+            value : "NDR 2 Hamburg"
         }
     }, {
         players : [
@@ -24,7 +24,7 @@ var config = [
         ],
         play : {
             type : "favourite",
-            value : "NDR 2"
+            value : "NDR 2 Hamburg"
         }
     }
 ];
