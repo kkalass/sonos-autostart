@@ -39,7 +39,7 @@ app.get('/', function(req, res) {
 
             console.log("Manual Autoplay trigger!") // Show the HTML for the Google homepage.
 
-            var players = topologyChangeParser.parseTopologyPlayerInfo(body);
+            var players = topologyChangeParser.parseTopologyPlayerInfo(JSON.parse(body));
             console.log("Found players", players);
             autoplayservice.autoplay(players);
             res.send('Triggered!');
