@@ -1,5 +1,9 @@
 var _ = require('underscore');
 var request = require('request');
+var bunyan = require('bunyan');
+var log = bunyan.createLogger({
+    name : 'sonos-autostart'
+});
 
 exports.service = function(config) {
     var getPlayerConfig = function(name) {
@@ -10,26 +14,26 @@ exports.service = function(config) {
     };
 
     var autoplay = function(players) {
-        console.log('autoplay started', players);
+        log.info('autoplay started', players);
         _(players).each(
             function(player) {
 
                 if (!player.playing) {
-                    console.log('Found non-playing player', player);
+                    log.info('Found non-playing player', player);
                     // TODO: implement grouping
                     var playerConfig = getPlayerConfig(player.name);
                     if (playerConfig.play.type == "favourite") {
                         // TODO: call the sonos api
                         var url = "http://localhost:5005/" + player.name + "/favorite/"
                                   + playerConfig.play.value;
-                        console.log('call sonos api for ', playerConfig.play.value, ' url ', url);
+                        log.info('call sonos api for ', playerConfig.play.value, ' url ', url);
                         request(url, function(error, response, body) {
                             if (!error && response.statusCode == 200) {
-                                console.log("Autoplay SUCCESS!") // Show the HTML for the Google homepage.
+                                log.info("Autoplay SUCCESS!") // Show the HTML for the Google homepage.
                             }
                         });
                     } else {
-                        console.info('unknown type of play config', playerConfig.play.type);
+                        log.info('unknown type of play config', playerConfig.play);
                     }
                 }
             });

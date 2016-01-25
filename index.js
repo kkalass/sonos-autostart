@@ -4,6 +4,11 @@ var multer = require('multer'); // v1.0.5
 var upload = multer(); // for parsing multipart/form-data
 var request = require('request');
 
+var bunyan = require('bunyan');
+var log = bunyan.createLogger({
+    name : 'sonos-autostart'
+});
+
 var app = express();
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({
@@ -34,7 +39,7 @@ var autoplayservice = require('./src/autoplayservice.js').service(config);
 
 var autoplayTrigger = function() {
     var players = topologyChangeParser.parseTopologyPlayerInfo(JSON.parse(body));
-    console.log("Found players", players);
+    log.info("Found players", players);
     autoplayservice.autoplay(players);
 }
 
@@ -43,7 +48,7 @@ app.get('/', function(req, res) {
     request(url, function(error, response, body) {
         if (!error && response.statusCode == 200) {
 
-            console.log("Manual Autoplay trigger!") // Show the HTML for the Google homepage.
+            log.info("Manual Autoplay trigger!") // Show the HTML for the Google homepage.
 
             autoplayTrigger();
             res.send('Triggered!');
@@ -57,9 +62,9 @@ app.post('/eventcb', upload.array(), function(req, res) {
     var body = req.body;
     // console.log('got event ', body.type);
     if (body.type === 'topology-change') {
-        console.log('topology changed');
+        log.info('topology changed');
         var players = topologyChangeParser.parseTopologyPlayerInfo(body.data);
-        console.log('topology change found players', players);
+        log.info('topology change found players', players);
         autoplayservice.autoplay(players);
     }
 
@@ -70,7 +75,7 @@ var server = app.listen(3000, function() {
     var host = server.address().address;
     var port = server.address().port;
 
-    console.log('Example app listening at http://%s:%s', host, port);
+    log.info('Example app listening at http://%s:%s', host, port);
     autoplayTrigger();
     // check every 5 minutes, in case the topology change notification does not arrive
     setInterval(autoplayTrigger, 5 * 60 * 1000);
