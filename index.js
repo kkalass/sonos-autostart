@@ -37,23 +37,27 @@ var config = [
 var topologyChangeParser = require('./src/topologyChangeParser.js');
 var autoplayservice = require('./src/autoplayservice.js').service(config);
 
-var autoplayTrigger = function() {
-    var players = topologyChangeParser.parseTopologyPlayerInfo(JSON.parse(body));
-    log.info("Found players", players);
-    autoplayservice.autoplay(players);
-}
-
-app.get('/', function(req, res) {
+var autoplayTrigger = function(cb) {
     var url = "http://localhost:5005/zones";
     request(url, function(error, response, body) {
         if (!error && response.statusCode == 200) {
 
-            log.info("Manual Autoplay trigger!") // Show the HTML for the Google homepage.
+            log.info(" Autoplay trigger!") // Show the HTML for the Google homepage.
 
-            autoplayTrigger();
-            res.send('Triggered!');
+            var players = topologyChangeParser.parseTopologyPlayerInfo(JSON.parse(body));
+            log.info("Found players", players);
+            autoplayservice.autoplay(players);
+            if (cb) {
+                cb();
+            }
         }
     })
+}
+
+app.get('/', function(req, res) {
+    autoplayTrigger(function() {
+        res.send('Triggered!');
+    });
 });
 
 app.post('/eventcb', upload.array(), function(req, res) {
