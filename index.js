@@ -32,6 +32,12 @@ var config = [
 var topologyChangeParser = require('./src/topologyChangeParser.js');
 var autoplayservice = require('./src/autoplayservice.js').service(config);
 
+var autoplayTrigger = function() {
+    var players = topologyChangeParser.parseTopologyPlayerInfo(JSON.parse(body));
+    console.log("Found players", players);
+    autoplayservice.autoplay(players);
+}
+
 app.get('/', function(req, res) {
     var url = "http://localhost:5005/zones";
     request(url, function(error, response, body) {
@@ -39,9 +45,7 @@ app.get('/', function(req, res) {
 
             console.log("Manual Autoplay trigger!") // Show the HTML for the Google homepage.
 
-            var players = topologyChangeParser.parseTopologyPlayerInfo(JSON.parse(body));
-            console.log("Found players", players);
-            autoplayservice.autoplay(players);
+            autoplayTrigger();
             res.send('Triggered!');
         }
     })
@@ -67,4 +71,7 @@ var server = app.listen(3000, function() {
     var port = server.address().port;
 
     console.log('Example app listening at http://%s:%s', host, port);
+    autoplayTrigger();
+    // check every 5 minutes, in case the topology change notification does not arrive
+    setInterval(autoplayTrigger, 5 * 60 * 1000);
 });
