@@ -82,5 +82,5 @@ var server = app.listen(3000, function() {
     log.info('Example app listening at http://%s:%s', host, port);
     autoplayTrigger();
     // check every 5 minutes, in case the topology change notification does not arrive
-    //setInterval(autoplayTrigger, 5 * 60 * 1000);
+    setInterval(autoplayTrigger, 5 * 60 * 1000);
 });
