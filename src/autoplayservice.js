@@ -29,7 +29,9 @@ exports.service = function(config) {
                         log.info('call sonos api for ', playerConfig.play.value, ' url ', url);
                         request(url, function(error, response, body) {
                             if (!error && response.statusCode == 200) {
-                                log.info("Autoplay SUCCESS!") // Show the HTML for the Google homepage.
+                                request( "http://localhost:5005/" + player.name + "/play", function (e2, res2, body2) {
+                                    log.info("Autoplay SUCCESS!") // Show the HTML for the Google homepage.
+                                });
                             }
                         });
                     } else {
